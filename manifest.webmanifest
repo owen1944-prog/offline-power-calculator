@@ -1,0 +1,26 @@
+{
+  "id": "./",
+  "name": "家戶電力計算工具",
+  "short_name": "電力計算",
+  "description": "多電器功率判定、每日用電估算與報告列印。需先連網準備才可離線。",
+  "lang": "zh-TW",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#176b9b",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
