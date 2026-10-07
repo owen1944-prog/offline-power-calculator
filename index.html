@@ -15,7 +15,7 @@ body{font-size:10pt;line-height:1.45;background:#fff!important;color:#111!import
 
 .offline-panel{padding:16px 20px;border:1px solid var(--border);border-radius:8px;background:var(--surface);margin:0 0 24px}.offline-panel h2{font-size:18px;margin:0 0 8px}.offline-panel p{font-size:14px;margin:8px 0 0}.offline-panel #offline-status{font-size:16px;font-weight:650;color:var(--blue)}.offline-panel #offline-status[data-ready="true"]{color:var(--green)}.offline-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}.offline-actions button{background:var(--bg);color:var(--blue);border:1px solid var(--blue)}.offline-actions button:disabled{opacity:.6;cursor:not-allowed}.offline-panel details{font-size:14px}.offline-panel summary{font-size:14px}.offline-panel ol{padding-left:24px}.offline-panel li{margin-bottom:8px}
 </style>
-<meta name="app-version" content="0.4.0">
+<meta name="app-version" content="0.4.1">
 <meta name="theme-color" content="#176b9b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="./manifest.webmanifest">
@@ -26,7 +26,7 @@ body{font-size:10pt;line-height:1.45;background:#fff!important;color:#111!import
 <div class="eyebrow">能源管理 · 多電器版</div>
 <h1>這份電力，能支援幾天？</h1>
 <p class="lead">列出家中想使用的電器、數量與每日使用習慣，先檢查個別功率條件，再估算每日用電與可支援天數。</p>
-<div class="version-note">v0.4.0 · 本機計算，不上傳或儲存輸入資料；離線快取只保存工具程式，不保存本次電器清單。</div>
+<div class="version-note">v0.4.1 · 本機計算，不上傳或儲存輸入資料；離線快取只保存工具程式，不保存本次電器清單。</div>
 <section class="offline-panel" aria-labelledby="offline-title">
 <h2 id="offline-title">離線使用準備</h2>
 <p id="offline-status" role="status" aria-live="polite" data-ready="false">正在準備離線檔案，第一次請保持網路連線…</p>
@@ -34,7 +34,7 @@ body{font-size:10pt;line-height:1.45;background:#fff!important;color:#111!import
 <div class="offline-actions"><button id="offline-retry" type="button" disabled>重新準備（需連網）</button><button id="offline-update" type="button" hidden>更新程式</button><button id="offline-install" type="button" hidden>加入主畫面／安裝</button></div>
 <p id="update-note" hidden>新版已下載完成。更新會重新載入並清除本次輸入與報告，請先列印或另存 PDF。</p>
 <details><summary>第一次準備與手機使用方式</summary>
-<ol><li>先連網開啟此網址，等畫面顯示「已完成離線準備」。第一次不能直接掃碼離線開啟。</li><li>使用同一台裝置、同一個瀏覽器，關閉網路後重新開啟此網址；不需掃碼也能從書籤開啟。</li><li>iPhone／iPad：Safari 的分享選單 → 加入主畫面。Android：使用本頁安裝按鈕（若顯示），或 Chrome 選單的「安裝應用程式／加入主畫面」。</li><li>主畫面版本開啟後，請再確認它顯示「已完成離線準備」，然後實際測試飛航模式���開。不同瀏覽器或主畫面版本的儲存可能分開。</li></ol>
+<ol><li>先連網開啟此網址，等畫面顯示「已完成離線準備」。第一次不能直接掃碼離線開啟。</li><li>使用同一台裝置、同一個瀏覽器，關閉網路後重新開啟此網址；不需掃碼也能從書籤開啟。</li><li>iPhone／iPad：Safari 的分享選單 → 加入主畫面。Android：使用本頁安裝按鈕（若顯示），或 Chrome 選單的「安裝應用程式／加入主畫面」。</li><li>主畫面版本開啟後，請再確認它顯示「已完成離線準備」，然後開啟飛航模式，關閉工具後再重新開啟，確認仍可使用。不同瀏覽器或主畫面版本的儲存可能分開。</li></ol>
 <p>請勿依賴無痕模式。清除網站資料、重裝瀏覽器，或系統釋放儲存空間後，可能需要重新連網準備；離線不代表永久保存。重新開啟工具時需重填資料，重要報告請另存 PDF。</p></details>
 </section>
 <form id="planner" novalidate>
@@ -72,10 +72,10 @@ body{font-size:10pt;line-height:1.45;background:#fff!important;color:#111!import
 </div>
 <div id="combined-warning" class="warning" role="status" hidden></div><p id="combined-ok" class="ok-note" hidden></p>
 <div class="limits"><strong>供電安全與估算限制</strong><p>功率條件以持續輸出為準，但仍須確認 110 V 電壓、接口、供電協議、波形與啟動功率相容。啟動瞬間可能需要較高功率，錯開使用也不保證一定能啟動。</p>
-<details><summary>查看計算方式與假設</summary><ul><li>每項每日用電＝每台工作功率 W × 數量 × 每台每日使用時數。</li><li>可支援天數＝標稱容量 Wh × 可用比例 ÷ 通過檢查的每日總用電 Wh。</li><li>假設每天使用習慣相同，期間不再充電，且不另外計算設備自身耗電。</li><li>工作功率視為開��期間的固定耗電。間歇運轉或功率變動的設備需以合適實測資料估算，否則續航可能偏差；充電器的最大輸出功率不可直接當成實際耗電。</li><li>全部同時開啟功率＝通過檢查電器的每台工作功率 × 數量總和。每日時數為 0 的項目亦列入此假設檢查，但每日能量貢獻為 0。</li><li>輸出須大於需求，是本工具的保守判定門檻；相等不通過不代表所有實際設備都無法運作。</li><li>若輸入實測可用輸出能量，不要重複扣除同一轉換損失。本工具不作為醫療或其他關鍵設備的供電保證。</li></ul></details></div>
-<p class="print-only report-print-footer">家戶電力計算工具 · v0.4.0 · 教學估算，非實際供電保證。紙本／PDF 報告不代表裝置的離線快取狀態；請以網頁的離線準備提示為準。</p>
+<details><summary>查看計算方式與假設</summary><ul><li>每項每日用電＝每台工作功率 W × 數量 × 每台每日使用時數。</li><li>可支援天數＝標稱容量 Wh × 可用比例 ÷ 通過檢查的每日總用電 Wh。</li><li>假設每天使用習慣相同，期間不再充電，且不另外計算設備自身耗電。</li><li>工作功率視為開啟期間的固定耗電。間歇運轉或功率變動的設備需以合適實測資料估算，否則續航可能偏差；充電器的最大輸出功率不可直接當成實際耗電。</li><li>全部同時開啟功率＝通過檢查電器的每台工作功率 × 數量總和。每日時數為 0 的項目亦列入此假設檢查，但每日能量貢獻為 0。</li><li>輸出須大於需求，是本工具的保守判定門檻；相等不通過不代表所有實際設備都無法運作。</li><li>若輸入實測可用輸出能量，不要重複扣除同一轉換損失。本工具不作為醫療或其他關鍵設備的供電保證。</li></ul></details></div>
+<p class="print-only report-print-footer">家戶電力計算工具 · v0.4.1 · 教學估算，非實際供電保證。紙本／PDF 報告不代表裝置的離線快取狀態；請以網頁的離線準備提示為準。</p>
 </div></section>
-<footer>v0.4.0 · 多電器、報告列印與離線使用 · 需先連網完成準備</footer>
+<footer>v0.4.1 · 多電器、報告列印與離線使用 · 需先連網完成準備</footer>
 </main>
 <script>
 'use strict';
@@ -121,7 +121,7 @@ $('print-report').addEventListener('click',()=>{if(!$('report-content').hidden)w
 
 // All program files stay on this website. Appliance inputs are never persisted or uploaded.
 (()=>{
-const APP_VERSION='0.4.0';
+const APP_VERSION='0.4.1';
 const status=document.getElementById('offline-status');
 const network=document.getElementById('network-status');
 const retry=document.getElementById('offline-retry');
