@@ -1,135 +1,87 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light dark">
-<title>離線電力計算工具</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark">
+<title>家戶電力計算工具｜多電器版</title>
 <style>
-:root{--bg:#fff;--surface:#f9f8f7;--text:#2c2c2b;--muted:#65625e;--border:#d5d3d0;--accent:#176b9b;--tint:#e5f2fc;--error:#b43125}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:960px;margin:auto;padding:32px 24px 48px}.eyebrow{font-size:14px;color:var(--accent);font-weight:700;letter-spacing:.06em}h1{font-size:clamp(28px,5vw,40px);line-height:1.25;margin:8px 0 12px}p{margin:0 0 16px}.lead{color:var(--muted);max-width:680px}.status{font-size:14px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin:24px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}fieldset{min-width:0;margin:0;padding:20px;border:1px solid var(--border);border-radius:12px}legend{padding:0 8px;font-size:22px;font-weight:700}label{display:block;font-weight:600;margin-bottom:8px}input{display:block;width:100%;min-height:48px;font:inherit;color:var(--text);background:var(--bg);border:1px solid #898782;border-radius:8px;padding:10px 12px}input:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.hint{font-size:14px;color:var(--muted);margin:8px 0 20px}.hint:last-child{margin-bottom:0}.error{font-size:14px;color:var(--error);margin:8px 0 0;min-height:22px}button{min-height:48px;font:inherit;font-weight:700;background:var(--accent);color:#fff;border:0;border-radius:8px;padding:12px 24px;cursor:pointer;width:100%;margin-top:24px}.result{margin-top:24px;padding:24px;background:var(--tint);border:1px solid var(--border);border-radius:12px}.result h2{font-size:18px;margin:0 0 8px}.number{font-size:36px;font-weight:750;line-height:1.3;margin:8px 0}.method{font-size:14px;margin-top:12px}.note{margin-top:24px;color:var(--muted);font-size:14px}details{margin-top:16px}summary{cursor:pointer;padding:8px 0;font-weight:600;min-height:44px}ul{padding-left:24px;margin:8px 0}footer{font-size:14px;color:var(--muted);margin-top:32px;border-top:1px solid var(--border);padding-top:16px}[hidden]{display:none!important}@media(max-width:640px){main{padding:24px 16px 32px}.grid{grid-template-columns:1fr;gap:20px}fieldset{padding:16px}.number{font-size:30px}}@media(prefers-color-scheme:dark){:root{--bg:#191919;--surface:#202020;--text:#fff;--muted:#b8b6b2;--border:#575653;--accent:#8fc9f5;--tint:#202e3b;--error:#ff9b90}button{color:#191919}}
-
-.step-title{font-size:22px;line-height:1.5;margin:0 0 20px;padding:12px 16px;border-radius:8px;background:var(--surface);border-left:5px solid var(--accent)}
-.step-one .step-title{border-left-color:#934518}.step-two{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}
-.power-output{margin-top:20px;padding:20px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
-.power-output h3{margin:0 0 8px;font-size:18px}.power-output p{margin:8px 0 0}.power-output .verdict{font-size:26px;font-weight:750;line-height:1.4}
-.power-output.pass{background:#e8f1ec;color:#245b3e;border-color:#9cbdac}.power-output.fail{background:#fce9e7;color:#8d2920;border-color:#daa29b}
-@media(prefers-color-scheme:dark){.step-one .step-title{border-left-color:#de9255}.power-output.pass{background:#24372b;color:#b5e3c7;border-color:#669a7a}.power-output.fail{background:#3b2423;color:#ffc0b7;border-color:#b37268}}
+:root{--bg:#fff;--surface:#f9f8f7;--text:#2c2c2b;--muted:#66635f;--border:#d5d3d0;--input-border:#86837e;--blue:#176b9b;--tint:#e5f2fc;--green:#245b3e;--green-bg:#e8f1ec;--red:#a13227;--red-bg:#fce9e7;--orange:#874514;--orange-bg:#fbebde}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1080px;margin:auto;padding:32px 24px 48px}.eyebrow{font-size:14px;font-weight:700;color:var(--blue);letter-spacing:.06em}h1{font-size:clamp(28px,4vw,40px);line-height:1.3;margin:8px 0 12px}h2{font-size:24px;line-height:1.4;margin:0 0 20px}h3{font-size:20px;margin:0 0 16px}p{margin:0 0 16px}.lead{color:var(--muted);max-width:740px}.version-note{font-size:14px;margin:20px 0 24px;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface)}.section-title{padding:12px 16px;background:var(--surface);border-left:5px solid var(--blue);border-radius:8px}.panel{border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px}.battery-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.field label{display:block;font-weight:650;margin:0 0 8px}.unit{font-weight:400;color:var(--muted)}input{width:100%;min-height:48px;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--input-border);border-radius:8px;padding:10px 12px;min-width:0}input:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:3px}input[aria-invalid=true]{border-color:var(--red)}.hint{font-size:14px;color:var(--muted);margin:16px 0 0}.subhead{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}.subhead p{font-size:14px;color:var(--muted)}.appliance{padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-top:16px}.row-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px}.row-number{font-size:16px;font-weight:700}.appliance-grid{display:grid;grid-template-columns:2fr .8fr 1.2fr 1.4fr;gap:16px}button{font:inherit;font-weight:650;min-height:44px;border-radius:8px;padding:10px 16px;cursor:pointer}.remove{background:var(--bg);border:1px solid var(--border);color:var(--muted)}.remove:disabled{opacity:.5;cursor:not-allowed}.add{width:100%;margin-top:16px;border:1px dashed var(--blue);color:var(--blue);background:var(--bg)}.submit{display:block;background:var(--blue);border:0;color:#fff;width:100%;padding:14px 24px;font-size:18px;margin-top:24px}.error{color:var(--red);font-size:14px;margin:12px 0 0}.report{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.report-card{min-width:0;padding:24px;border:1px solid var(--border);border-radius:12px}.energy-card{background:var(--tint)}.empty{color:var(--muted);margin:0}.device-list{list-style:none;padding:0;margin:0}.device-list li{border-top:1px solid var(--border);padding:16px 0;overflow-wrap:anywhere}.device-list li:first-child{border-top:0;padding-top:0}.device-name{font-weight:700}.device-detail{font-size:14px;color:var(--muted);margin-top:4px}.badge{font-size:14px;font-weight:650;color:var(--green);margin-bottom:16px}.excluded{margin-top:24px}.excluded h4{font-size:16px;color:var(--red);margin:0 0 12px}.big{font-size:clamp(32px,4vw,44px);line-height:1.3;font-weight:750;margin:12px 0 16px;overflow-wrap:anywhere}.stats{margin:20px 0 0}.stats div{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;padding:12px 0;border-top:1px solid var(--border)}dt{color:var(--muted)}dd{margin:0;font-weight:700;overflow-wrap:anywhere}.warning{padding:16px;background:var(--orange-bg);color:var(--orange);border:1px solid #c7a47e;border-radius:8px;margin-top:20px;font-size:14px;overflow-wrap:anywhere}.ok-note{font-size:14px;color:var(--green);margin:16px 0 0}.limits{margin-top:24px;color:var(--muted);font-size:14px}details{margin-top:16px}summary{font-weight:650;cursor:pointer;padding:8px 0;min-height:44px}ul{padding-left:24px}footer{border-top:1px solid var(--border);padding-top:16px;margin-top:32px;font-size:14px;color:var(--muted)}[hidden]{display:none!important}@media(max-width:760px){.battery-grid{grid-template-columns:1fr}.appliance-grid{grid-template-columns:1fr 1fr}.report-grid{grid-template-columns:1fr}.panel,.report-card{padding:20px}}@media(max-width:450px){main{padding:24px 16px 32px}.panel,.report-card{padding:16px}.appliance{padding:16px}.appliance-grid{grid-template-columns:1fr}.big{font-size:32px}}@media(prefers-color-scheme:dark){:root{--bg:#191919;--surface:#202020;--text:#fff;--muted:#b8b6b2;--border:#575653;--input-border:#99958f;--blue:#8fc9f5;--tint:#202e3b;--green:#b5e3c7;--green-bg:#24372b;--red:#ffb0a5;--red-bg:#3b2423;--orange:#f0c59a;--orange-bg:#35291e}.submit{color:#191919}}
 </style>
 </head>
-<body>
-<main>
-<div class="eyebrow">能源管理 · 手動輸入版</div>
-<h1>這份電力，能用多久？</h1>
-<p class="lead">先比較工作功率與持續輸出功率，再估算一台電器的運作時間。資料只在這個頁面計算，不會傳送或儲存。</p>
-<div class="status" role="status">目前版本：手動計算。尚未加入離線快取，請勿視為已完成離線準備。</div>
-<section class="step-one" aria-labelledby="step-one-title">
-<h2 id="step-one-title" class="step-title">第一步：確認儲能裝置能否驅動電器</h2>
-<form id="power-check" novalidate>
-<div class="grid">
-<fieldset><legend>欲使用的電器</legend>
-<label for="working">工作功率（W）</label>
-<input id="working" type="number" inputmode="decimal" min="0" step="any" placeholder="例如：100" required aria-describedby="working-hint working-error">
-<p id="working-error" class="error" aria-live="polite"></p>
-<p id="working-hint" class="hint">請填電器所需的工作功率，不要用充電器的最大輸出功率代替。</p>
-</fieldset>
-<fieldset><legend>儲能裝置</legend>
-<label for="output">持續輸出功率（W）</label>
-<input id="output" type="number" inputmode="decimal" min="0" step="any" placeholder="例如：150" required aria-describedby="output-hint output-error">
-<p id="output-error" class="error" aria-live="polite"></p>
-<p id="output-hint" class="hint">請填實際使用接口的持續輸出額定值，不是峰值、充電輸入功率或多接口合計值。</p>
-</fieldset>
-</div>
-<button type="submit">確認功率條件</button>
+<body><main>
+<div class="eyebrow">能源管理 · 多電器版</div>
+<h1>這份電力，能支援幾天？</h1>
+<p class="lead">列出家中想使用的電器、數量與每日使用習慣，先檢查個別功率條件，再估算每日用電與可支援天數。</p>
+<div class="version-note">v0.3 · 本機計算，不上傳或儲存輸入資料。尚未加入離線快取，請勿視為已完成離線準備。</div>
+<form id="planner" novalidate>
+<h2 class="section-title">第一步：基本資料</h2>
+<section class="panel" aria-labelledby="battery-title"><h3 id="battery-title">儲能裝置規格</h3>
+<div class="battery-grid">
+<div class="field"><label for="output">持續輸出功率 <span class="unit">（W）</span></label><input id="output" type="number" inputmode="decimal" step="any" min="0" required placeholder="例如：300" aria-describedby="battery-hint battery-error"></div>
+<div class="field"><label for="capacity">標稱能量容量 <span class="unit">（Wh）</span></label><input id="capacity" type="number" inputmode="decimal" step="any" min="0" required placeholder="例如：1000" aria-describedby="battery-hint battery-error"></div>
+<div class="field"><label for="usable">估計可用比例 <span class="unit">（％）</span></label><input id="usable" type="number" inputmode="decimal" step="any" min="0" max="100" required placeholder="請填寫估計值" aria-describedby="usable-hint battery-error"></div>
+</div><p id="battery-error" class="error" role="alert" hidden></p>
+<p id="battery-hint" class="hint">請填 110 V AC 輸出接口的持續額定功率，不是峰值、充電輸入功率或多接口合計值。容量請用 Wh，本版不換算 mAh／Ah。</p>
+<p id="usable-hint" class="hint">可用比例是使用者假設，需合併考慮剩餘電量、保留電量與轉換損失。例如 80％表示估計標稱容量的 80％可供電器使用，並非通用效率。</p></section>
+<section class="panel" aria-labelledby="appliances-title"><div class="subhead"><h3 id="appliances-title">欲使用電器一覽</h3><p>限 110 V 電器；冷氣請另外評估。</p></div>
+<p class="hint" style="margin-top:0">功率與每日時數皆為「每台」資料，數量會自動乘入每日用電。請填正整數數量；每日時數可填 0～24 小時。新增後未填寫的空白項目不會計算。</p>
+<div id="appliances"></div>
+<button id="add" type="button" class="add">＋ 新增電器</button>
+<p id="list-error" class="error" role="alert" hidden></p>
+</section>
+<button class="submit" type="submit">送出，產生結果報告</button>
+<p id="form-error" class="error" role="alert" hidden></p>
 </form>
-<div id="power-result" class="power-output" aria-live="polite" aria-atomic="true">
-<h3>功率檢查結果</h3>
-<p id="power-verdict" class="verdict">等待輸入</p>
-<p id="power-detail">填寫兩個欄位後，按下確認。</p>
+<section id="report" class="report" aria-labelledby="report-title" tabindex="-1"><h2 id="report-title" class="section-title">結果報告</h2>
+<p id="report-empty" class="empty">填寫基本資料後送出，即可查看電器判定與預估支援天數。</p>
+<div id="report-content" hidden>
+<div class="report-grid">
+<section class="report-card" aria-labelledby="eligible-title"><h3 id="eligible-title">可驅動電器一覽</h3><p class="badge">通過個別功率檢查，不代表實際供電保證</p><ul id="eligible-list" class="device-list"></ul><p id="no-eligible" class="empty" hidden>沒有電器通過個別功率檢查。</p>
+<div id="excluded-section" class="excluded" hidden><h4>未通過的電器（未計入天數）</h4><ul id="excluded-list" class="device-list"></ul></div>
+<p class="hint">每台工作功率必須小於儲能裝置持續輸出功率，相等也不通過。本清單以每台檢查；同一項目的多台若一起開，仍須確認合計功率。</p></section>
+<section class="report-card energy-card" aria-labelledby="days-title"><h3 id="days-title">儲能裝置可支援天數</h3><p>依通過功率檢查的電器與每日使用習慣，估計可支援：</p><p id="days" class="big"></p><p id="days-detail"></p>
+<dl class="stats"><div><dt>估計可用能量</dt><dd id="energy"></dd></div><div><dt>納入的每日總用電</dt><dd id="daily"></dd></div><div><dt>全部納入電器同時開啟</dt><dd id="peak"></dd></div><div><dt>儲能裝置持續輸出</dt><dd id="rated"></dd></div></dl>
+<p class="hint">天數是「每日用電量」的能量估算，不是所有電器連續運作的時數，也不是已驗證的使用排程。未通過的電器需求沒有納入。</p></section>
 </div>
-<p class="note"><strong>本工具的判定規則：</strong>持續輸出功率必須「大於」電器工作功率；相等也判為動不了。這是本工具設定的保守門檻，不代表相等時所有設備都無法運作。通過後仍須確認電壓、接口、供電協議及啟動功率相容。</p>
-</section>
-<section class="step-two" aria-labelledby="step-two-title">
-<h2 id="step-two-title" class="step-title">第二步：計算運作時間</h2>
-<form id="calculator" novalidate>
-<div class="grid">
-<fieldset><legend>欲使用的電器</legend>
-<label for="watts">平均耗電功率（W）</label>
-<input id="watts" name="watts" type="number" inputmode="decimal" min="0" step="any" placeholder="例如：10" required aria-describedby="watts-hint watts-error">
-<p id="watts-error" class="error" aria-live="polite"></p>
-<p id="watts-hint" class="hint">請用實際平均耗電，不要直接填入充電器的最大輸出功率。</p>
-</fieldset>
-<fieldset><legend>儲能裝置</legend>
-<label for="capacity">標稱能量容量（Wh）</label>
-<input id="capacity" name="capacity" type="number" inputmode="decimal" min="0" step="any" placeholder="例如：100" required aria-describedby="capacity-hint capacity-error">
-<p id="capacity-error" class="error" aria-live="polite"></p>
-<p id="capacity-hint" class="hint">請找標籤上的 Wh；本版不換算 mAh 或 Ah。</p>
-<label for="usable">估計可用比例（％）</label>
-<input id="usable" name="usable" type="number" inputmode="decimal" min="0" max="100" step="any" placeholder="請填寫估計值" required aria-describedby="usable-hint usable-error">
-<p id="usable-error" class="error" aria-live="polite"></p>
-<p id="usable-hint" class="hint">將剩餘電量、保留電量與轉換損失合併估計。這是使用者假設，沒有通用標準值；例如填 80 表示估計只有標稱容量的 80％可供電器使用。</p>
-</fieldset>
-</div>
-<button type="submit">計算預估時間</button>
-</form>
-<section id="result" class="result" aria-live="polite" aria-atomic="true">
-<h2>預估運作時間</h2>
-<p id="duration" class="number">等待輸入</p>
-<p id="result-description">填寫三個欄位後，按下計算。</p>
-<p id="method" class="method" hidden></p>
-</section>
-<div class="note"><strong>先確認能供電，再參考時數。</strong>第一步只比較工作功率與持續輸出功率，未檢查接口、電壓、供電協議或啟動功率是否相容，也不保證設備能啟動。實際運作時間會受負載、溫度、電池狀況與設備自身耗電影響。
-<details><summary>計算方式與使用限制</summary><ul>
-<li>預估小時＝標稱容量 Wh × 可用比例 ÷ 平均耗電 W。</li>
-<li>假設只有一台電器、平均耗電固定，使用期間不再充電。</li>
-<li>若使用實測可用輸出能量，請避免再重複扣除轉換損失。</li>
-<li>冰箱等間歇運作設備應使用平均耗電，不宜直接套用額定功率。</li>
-<li>本工具為教學估算，不作為醫療或其他關鍵設備供電的保證。</li>
-</ul></details></div>
-</section>
-<footer>v0.2 · 功率檢查＋時間估算 · 尚未加入離線功能</footer>
+<div id="combined-warning" class="warning" role="status" hidden></div><p id="combined-ok" class="ok-note" hidden></p>
+<div class="limits"><strong>供電安全與估算限制</strong><p>功率條件以持續輸出為準，但仍須確認 110 V 電壓、接口、供電協議、波形與啟動功率相容。啟動瞬間可能需要較高功率，錯開使用也不保證一定能啟動。</p>
+<details><summary>查看計算方式與假設</summary><ul><li>每項每日用電＝每台工作功率 W × 數量 × 每台每日使用時數。</li><li>可支援天數＝標稱容量 Wh × 可用比例 ÷ 通過檢查的每日總用電 Wh。</li><li>假設每天使用習慣相同，期間不再充電，且不另外計算設備自身耗電。</li><li>工作功率視為開啟期間的固定耗電。間歇運轉或功率變動的設備需以合適實測資料估算，否則續航可能偏差；充電器的最大輸出功率不可直接當成實際耗電。</li><li>全部同時開啟功率＝通過檢查電器的每台工作功率 × 數量總和。每日時數為 0 的項目亦列入此假設檢查，但每日能量貢獻為 0。</li><li>輸出須大於需求，是本工具的保守判定門檻；相等不通過不代表所有實際設備都無法運作。</li><li>若輸入實測可用輸出能量，不要重複扣除同一轉換損失。本工具不作為醫療或其他關鍵設備的供電保證。</li></ul></details></div>
+</div></section>
+<footer>v0.3 · 多電器、數量與每日使用習慣 · 尚未加入離線功能</footer>
 </main>
 <script>
 'use strict';
-const form=document.getElementById('calculator');
-const ids=['watts','capacity','usable'];
-const formatter=new Intl.NumberFormat('zh-TW',{maximumSignificantDigits:4});
-const exactFormatter=new Intl.NumberFormat('zh-TW',{maximumSignificantDigits:15});
-function clearResult(){document.getElementById('duration').textContent='等待輸入';document.getElementById('result-description').textContent='填寫三個欄位後，按下計算。';document.getElementById('method').hidden=true;}
-for(const id of ids){document.getElementById(id).addEventListener('input',()=>{clearResult();document.getElementById(id+'-error').textContent='';document.getElementById(id).removeAttribute('aria-invalid');});}
-form.addEventListener('submit',event=>{
-event.preventDefault();let firstInvalid=null;const values={};
-for(const id of ids){const input=document.getElementById(id);const raw=input.value.trim();const value=Number(raw);let message='';
-if(raw===''||!Number.isFinite(value))message='請輸入有效數字。';
-else if(value<=0)message='請輸入大於 0 的數字。';
-else if(id==='usable'&&value>100)message='可用比例不可超過 100％。';
-document.getElementById(id+'-error').textContent=message;
-if(message){input.setAttribute('aria-invalid','true');if(!firstInvalid)firstInvalid=input;}else{input.removeAttribute('aria-invalid');values[id]=value;}}
-if(firstInvalid){clearResult();document.getElementById('result-description').textContent='請修正上方欄位後再計算。';firstInvalid.focus();return;}
-const energy=values.capacity*(values.usable/100);const hours=energy/values.watts;
-if(!Number.isFinite(hours)||!Number.isFinite(energy)||hours<=0||energy<=0){clearResult();document.getElementById('result-description').textContent='數值超出可計算範圍，請確認輸入與單位。';return;}
-document.getElementById('duration').textContent='約 '+formatter.format(hours)+' 小時';
-document.getElementById('result-description').textContent='估計可供電器使用的能量為 '+formatter.format(energy)+' Wh。這是依輸入假設計算的估算值，不代表供電相容性或實測續航。';
-const method=document.getElementById('method');method.textContent=formatter.format(values.capacity)+' Wh × '+formatter.format(values.usable)+'％ ÷ '+formatter.format(values.watts)+' W';method.hidden=false;
+const $=id=>document.getElementById(id);const format=new Intl.NumberFormat('zh-TW',{maximumSignificantDigits:4});const exact=new Intl.NumberFormat('zh-TW',{maximumSignificantDigits:15});let serial=0;
+function showError(id,message){$(id).textContent=message;$(id).hidden=!message;}
+function invalidate(){ $('report-content').hidden=true;$('report-empty').hidden=false;$('report-empty').textContent='資料已更新，請送出重新計算。';showError('form-error','');}
+function renumber(){const rows=[...document.querySelectorAll('.appliance')];rows.forEach((row,i)=>{row.querySelector('.row-number').textContent='電器 '+(i+1);row.querySelector('.remove').disabled=rows.length===1;row.querySelector('.remove').setAttribute('aria-label','移除電器 '+(i+1));});}
+function addRow(focus=true){const id=++serial;const row=document.createElement('div');row.className='appliance';row.dataset.id=id;
+row.innerHTML=`<div class="row-top"><span class="row-number"></span><button type="button" class="remove">移除</button></div><div class="appliance-grid"><div class="field"><label for="name-${id}">電器名稱</label><input id="name-${id}" data-key="name" type="text" maxlength="80" placeholder="例如：電風扇" aria-describedby="row-error-${id}"></div><div class="field"><label for="qty-${id}">數量 <span class="unit">（台）</span></label><input id="qty-${id}" data-key="qty" type="number" min="1" step="1" inputmode="numeric" value="1" aria-describedby="row-error-${id}"></div><div class="field"><label for="watts-${id}">每台工作功率 <span class="unit">（W）</span></label><input id="watts-${id}" data-key="watts" type="number" min="0" step="any" inputmode="decimal" placeholder="例如：40" aria-describedby="row-error-${id}"></div><div class="field"><label for="hours-${id}">每台每日使用時數 <span class="unit">（h）</span></label><input id="hours-${id}" data-key="hours" type="number" min="0" max="24" step="any" inputmode="decimal" placeholder="例如：4" aria-describedby="row-error-${id}"></div></div><p id="row-error-${id}" class="error" role="alert" hidden></p>`;
+row.querySelector('.remove').addEventListener('click',()=>{row.remove();renumber();invalidate();$('add').focus();});$('appliances').append(row);renumber();invalidate();if(focus)row.querySelector('[data-key=name]').focus();}
+$('add').addEventListener('click',()=>addRow());for(let i=0;i<3;i++)addRow(false);
+$('report-empty').textContent='填寫基本資料後送出，即可查看電器判定與預估支援天數。';
+$('planner').addEventListener('input',event=>{invalidate();event.target.removeAttribute('aria-invalid');const row=event.target.closest('.appliance');if(row)showError('row-error-'+row.dataset.id,'');else showError('battery-error','');showError('list-error','');});
+function renderDevice(list,item,detail){const li=document.createElement('li');const name=document.createElement('div');name.className='device-name';name.textContent=item.name+' × '+item.qty+' 台';const info=document.createElement('div');info.className='device-detail';info.textContent=detail;li.append(name,info);list.append(li);}
+$('planner').addEventListener('submit',event=>{
+event.preventDefault();let firstInvalid=null;const battery={};const batteryErrors=[];const labels={output:'持續輸出功率',capacity:'標稱能量容量',usable:'估計可用比例'};
+for(const id of ['output','capacity','usable']){const input=$(id);input.removeAttribute('aria-invalid');const raw=input.value.trim();const value=Number(raw);let error='';if(raw===''||!Number.isFinite(value)||value<=0)error=labels[id]+'請填大於 0 的有效數字。';else if(id==='usable'&&value>100)error='估計可用比例不可超過 100％。';if(error){batteryErrors.push(error);input.setAttribute('aria-invalid','true');if(!firstInvalid)firstInvalid=input;}else battery[id]=value;}
+showError('battery-error',batteryErrors.join(' '));const items=[];
+for(const row of document.querySelectorAll('.appliance')){const inputs={};for(const input of row.querySelectorAll('input')){inputs[input.dataset.key]=input;input.removeAttribute('aria-invalid');}showError('row-error-'+row.dataset.id,'');
+const raw={};for(const key of Object.keys(inputs))raw[key]=inputs[key].value.trim();if(!raw.name&&!raw.watts&&!raw.hours&&(raw.qty==='1'||raw.qty===''))continue;
+const errors=[];function flag(key,message){errors.push(message);inputs[key].setAttribute('aria-invalid','true');if(!firstInvalid)firstInvalid=inputs[key];}
+if(!raw.name)flag('name','請填電器名稱。');const qty=Number(raw.qty),watts=Number(raw.watts),hours=Number(raw.hours);
+if(!raw.qty||!Number.isSafeInteger(qty)||qty<=0)flag('qty','數量須為大於 0 的整數。');if(!raw.watts||!Number.isFinite(watts)||watts<=0)flag('watts','工作功率須大於 0。');if(raw.hours===''||!Number.isFinite(hours)||hours<0||hours>24)flag('hours','每日使用時數須為 0～24 小時。');
+if(!errors.length&&(!Number.isFinite(watts*qty)||!Number.isFinite(watts*qty*hours)))flag('watts','數值超出可計算範圍，請確認功率及數量。');
+showError('row-error-'+row.dataset.id,errors.join(' '));if(!errors.length)items.push({name:raw.name,qty,watts,hours});}
+showError('list-error',!items.length&&!firstInvalid?'請至少填寫一項電器。':'');
+if(firstInvalid||!items.length){invalidate();showError('form-error','請修正輸入後再送出。');(firstInvalid||document.querySelector('[data-key=name]')).focus();return;}
+const eligible=items.filter(item=>item.watts<battery.output);const excluded=items.filter(item=>item.watts>=battery.output);const daily=eligible.reduce((sum,item)=>sum+item.watts*item.qty*item.hours,0);const peak=eligible.reduce((sum,item)=>sum+item.watts*item.qty,0);const energy=battery.capacity*(battery.usable/100);const days=daily>0?energy/daily:null;
+if(!Number.isFinite(daily)||!Number.isFinite(peak)||!Number.isFinite(energy)||energy<=0||(days!==null&&(!Number.isFinite(days)||days<=0))){invalidate();showError('form-error','數值超出可計算範圍，請確認輸入數字與單位。');return;}
+$('eligible-list').replaceChildren();$('excluded-list').replaceChildren();for(const item of eligible)renderDevice($('eligible-list'),item,'每台 '+exact.format(item.watts)+' W · 每台每日 '+exact.format(item.hours)+' 小時 · 共 '+format.format(item.watts*item.qty*item.hours)+' Wh／日');for(const item of excluded)renderDevice($('excluded-list'),item,'每台 '+exact.format(item.watts)+' W '+(item.watts===battery.output?'等於':'大於')+'持續輸出 '+exact.format(battery.output)+' W，未通過本工具門檻。');
+$('no-eligible').hidden=eligible.length>0;$('excluded-section').hidden=!excluded.length;$('energy').textContent=format.format(energy)+' Wh';$('daily').textContent=format.format(daily)+' Wh／日';$('peak').textContent=exact.format(peak)+' W';$('rated').textContent=exact.format(battery.output)+' W';
+$('days').textContent=days===null?'無法估算天數':'約 '+format.format(days)+' 天';
+$('days-detail').textContent=!eligible.length?'沒有電器通過檢查，沒有可納入的每日用電需求。':daily===0?'納入電器的每日時數皆為 0，沒有每日用電量，因此不顯示無限天數。':'以每日固定用電習慣估算。'+(excluded.length?'注意：這不是全部輸入電器的供電天數，未通過的 '+excluded.length+' 項已排除。':'');
+const combinedIssue=eligible.length>0&&peak>=battery.output;$('combined-warning').hidden=!combinedIssue;$('combined-ok').hidden=!eligible.length||combinedIssue;
+$('combined-warning').textContent=combinedIssue?'⚠️ 需要錯開使用：全部納入電器同時開啟時為 '+exact.format(peak)+' W，'+(peak===battery.output?'等於':'超過')+'儲能裝置持續輸出 '+exact.format(battery.output)+' W。'+(peak===battery.output?'相等未通過本工具「輸出須大於需求」的門檻。':'同時開啟可能超載。')+'上方天數仍為能量估算，不代表目前使用排程可行。請將電器與同項目的多台設備錯開，使每個時段的合計工作功率小於輸出上限，並另行確認啟動功率。':'';
+$('combined-ok').textContent='全部納入電器一起開啟的工作功率小於輸出上限；這僅通過工作功率條件，仍須確認啟動與供電相容性。';$('report-empty').hidden=true;$('report-content').hidden=false;showError('form-error','');$('report').focus({preventScroll:true});$('report').scrollIntoView({behavior:'auto',block:'start'});
 });
-
-const powerForm=document.getElementById('power-check');
-function resetPower(){document.getElementById('power-result').className='power-output';document.getElementById('power-verdict').textContent='等待輸入';document.getElementById('power-detail').textContent='填寫兩個欄位後，按下確認。';}
-for(const id of ['working','output']){document.getElementById(id).addEventListener('input',()=>{resetPower();document.getElementById(id+'-error').textContent='';document.getElementById(id).removeAttribute('aria-invalid');});}
-powerForm.addEventListener('submit',event=>{
- event.preventDefault();let firstInvalid=null;const values={};
- for(const id of ['working','output']){
-  const input=document.getElementById(id);const raw=input.value.trim();const value=Number(raw);let message='';
-  if(raw===''||!Number.isFinite(value))message='請輸入有效數字。';else if(value<=0)message='請輸入大於 0 的數字。';
-  document.getElementById(id+'-error').textContent=message;
-  if(message){input.setAttribute('aria-invalid','true');if(!firstInvalid)firstInvalid=input;}else{input.removeAttribute('aria-invalid');values[id]=value;}
- }
- if(firstInvalid){resetPower();document.getElementById('power-detail').textContent='請修正上方欄位後再確認。';firstInvalid.focus();return;}
- const pass=values.output>values.working;
- document.getElementById('power-result').className='power-output '+(pass?'pass':'fail');
- document.getElementById('power-verdict').textContent=pass?'✅ 可運作':'❌ 動不了';
- const comparison='持續輸出 '+exactFormatter.format(values.output)+' W '+(pass?'大於':values.output===values.working?'等於':'小於')+' 工作功率 '+exactFormatter.format(values.working)+' W。';
- document.getElementById('power-detail').textContent=comparison+(pass?'通過本工具的功率檢查；仍須確認電壓、接口與啟動功率。':values.output===values.working?'相等未通過本工具「輸出須大於需求」的設定門檻。':'持續輸出功率不足，未通過功率檢查。');
-});
-</script>
-</body>
-</html>
+</script></body></html>
