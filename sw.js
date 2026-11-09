@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = '0.4.2';
+const VERSION = '0.4.3';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'power-calculator-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE_NAME = PREFIX + VERSION;
