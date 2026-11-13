@@ -15,7 +15,7 @@ body{font-size:10pt;line-height:1.45;background:#fff!important;color:#111!import
 
 .offline-panel{padding:16px 20px;border:1px solid var(--border);border-radius:8px;background:var(--surface);margin:0 0 24px}.offline-panel h2{font-size:18px;margin:0 0 8px}.offline-panel p{font-size:14px;margin:8px 0 0}.offline-panel #offline-status{font-size:16px;font-weight:650;color:var(--blue)}.offline-panel #offline-status[data-ready="true"]{color:var(--green)}.offline-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}.offline-actions button{background:var(--bg);color:var(--blue);border:1px solid var(--blue)}.offline-actions button:disabled{opacity:.6;cursor:not-allowed}.offline-panel details{font-size:14px}.offline-panel summary{font-size:14px}.offline-panel ol{padding-left:24px}.offline-panel li{margin-bottom:8px}
 </style>
-<meta name="app-version" content="0.4.3">
+<meta name="app-version" content="0.4.4">
 <meta name="theme-color" content="#176b9b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="./manifest.webmanifest">
@@ -26,7 +26,7 @@ body{font-size:10pt;line-height:1.45;background:#fff!important;color:#111!import
 <div class="eyebrow">能源管理 · 多電器版</div>
 <h1>這份電力，能支援幾天？</h1>
 <p class="lead">列出家中想使用的電器、數量與每日使用習慣，先檢查個別功率條件，再估算每日用電與可支援天數。</p>
-<div class="version-note">v0.4.3 · 本機計算，不上傳或儲存輸入資料；離線快取只保存工具程式，不保存本次電器清單。</div>
+<div class="version-note">v0.4.4 · 本機計算，不上傳或儲存輸入資料；離線快取只保存工具程式，不保存本次電器清單。</div>
 <section class="offline-panel" aria-labelledby="offline-title">
 <h2 id="offline-title">離線使用準備</h2>
 <p id="offline-status" role="status" aria-live="polite" data-ready="false">正在準備離線檔案，第一次請保持網路連線…</p>
@@ -41,11 +41,12 @@ body{font-size:10pt;line-height:1.45;background:#fff!important;color:#111!import
 <h2 class="section-title">第一步：基本資料</h2>
 <section class="panel" aria-labelledby="battery-title"><h3 id="battery-title">儲能裝置規格</h3>
 <div class="battery-grid">
-<div class="field"><label for="output">持續輸出功率 <span class="unit">（W）</span></label><input id="output" type="number" inputmode="decimal" step="any" min="0" required placeholder="例如：300" aria-describedby="battery-hint battery-error"></div>
-<div class="field"><label for="capacity">標稱能量容量 <span class="unit">（Wh）</span></label><input id="capacity" type="number" inputmode="decimal" step="any" min="0" required placeholder="例如：1000" aria-describedby="battery-hint battery-error"></div>
+<div class="field"><label for="output">持續輸出功率 <span class="unit">（W）</span></label><input id="output" type="number" inputmode="decimal" step="any" min="0" required placeholder="例如：300" aria-describedby="battery-hint unit-hint battery-error"></div>
+<div class="field"><label for="capacity">標稱能量容量 <span class="unit">（Wh）</span></label><input id="capacity" type="number" inputmode="decimal" step="any" min="0" required placeholder="例如：1000" aria-describedby="battery-hint unit-hint battery-error"></div>
 <div class="field"><label for="usable">機器目前剩餘電量 <span class="unit">（％）</span></label><input id="usable" type="number" inputmode="decimal" step="any" min="0" max="100" required placeholder="例如：80" aria-describedby="usable-hint battery-error"></div>
 </div><p id="battery-error" class="error" role="alert" hidden></p>
 <p id="battery-hint" class="hint">請填 110 V AC 輸出接口的持續額定功率，不是峰值、充電輸入功率或多接口合計值。容量請用 Wh，本版不換算 mAh／Ah。</p>
+<p id="unit-hint" class="hint"><strong>單位換算提醒：</strong>若規格標示為 kW 或 kWh，請先乘以 1,000，再填入上方欄位。例：5 kW＝5,000 W；13.5 kWh＝13,500 Wh。kW 是功率，kWh 是能量容量，請勿填反；本版不會自動換算。</p>
 <p id="usable-hint" class="hint">看儲能裝置螢幕上的電量百分比。例如顯示 80%，就填 80，不用輸入 %。本版以標稱容量乘上剩餘電量，再打 8 折扣除轉換損耗估算；實際使用時間仍可能因天氣、電池老化而不同。</p></section>
 <section class="panel" aria-labelledby="appliances-title"><div class="subhead"><h3 id="appliances-title">欲使用電器一覽</h3><p>限 110 V 電器；冷氣請另外評估。</p></div>
 <p class="hint" style="margin-top:0">功率與每日時數皆為「每台」資料，數量會自動乘入每日用電。請填正整數數量；每日時數可填 0～24 小時。新增後未填寫的空白項目不會計算。</p>
@@ -73,9 +74,9 @@ body{font-size:10pt;line-height:1.45;background:#fff!important;color:#111!import
 <div id="combined-warning" class="warning" role="status" hidden></div><p id="combined-ok" class="ok-note" hidden></p>
 <div class="limits"><strong>供電安全與估算限制</strong><p>功率條件以持續輸出為準，但仍須確認 110 V 電壓、接口、供電協議、波形與啟動功率相容。啟動瞬間可能需要較高功率，錯開使用也不保證一定能啟動。</p>
 <details><summary>查看計算方式與假設</summary><ul><li>每項每日用電＝每台工作功率 W × 數量 × 每台每日使用時數。</li><li>可支援天數＝標稱容量 Wh ×（機器目前剩餘電量 % ÷ 100）× 0.8 ÷ 通過檢查的每日總用電 Wh。</li><li>假設每天使用習慣相同，期間不再充電。乘 0.8 是為了扣除約兩成的轉換損耗（直流轉 110V 交流）、設備自身耗電與保留電量。這是估算用的安全係數，實際仍可能因使用情況而不同。</li><li>工作功率視為開啟期間的固定耗電。間歇運轉或功率變動的設備需以合適實測資料估算，否則續航可能偏差；充電器的最大輸出功率不可直接當成實際耗電。</li><li>全部同時開啟功率＝通過檢查電器的每台工作功率 × 數量總和。每日時數為 0 的項目亦列入此假設檢查，但每日能量貢獻為 0。</li><li>輸出須大於需求，是本工具的保守判定門檻；相等不通過不代表所有實際設備都無法運作。</li><li>請填標稱容量及機器螢幕顯示的剩餘電量，不要把實測可用輸出能量當作標稱容量混用。本工具不作為醫療或其他關鍵設備的供電保證。</li></ul></details></div>
-<p class="print-only report-print-footer">家戶電力計算工具 · v0.4.3 · 教學估算，非實際供電保證。紙本／PDF 報告不代表裝置的離線快取狀態；請以網頁的離線準備提示為準。</p>
+<p class="print-only report-print-footer">家戶電力計算工具 · v0.4.4 · 教學估算，非實際供電保證。紙本／PDF 報告不代表裝置的離線快取狀態；請以網頁的離線準備提示為準。</p>
 </div></section>
-<footer>v0.4.3 · 多電器、報告列印與離線使用 · 需先連網完成準備</footer>
+<footer>v0.4.4 · 多電器、報告列印與離線使用 · 需先連網完成準備</footer>
 </main>
 <script>
 'use strict';
@@ -122,7 +123,7 @@ $('print-report').addEventListener('click',()=>{if(!$('report-content').hidden)w
 
 // All program files stay on this website. Appliance inputs are never persisted or uploaded.
 (()=>{
-const APP_VERSION='0.4.3';
+const APP_VERSION='0.4.4';
 const status=document.getElementById('offline-status');
 const network=document.getElementById('network-status');
 const retry=document.getElementById('offline-retry');
